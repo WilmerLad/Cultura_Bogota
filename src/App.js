@@ -1,20 +1,20 @@
 // Importación de dependencias de React y componentes personalizados
 import React, { useState, useEffect } from 'react';
 import EventCard from './components/Eventosadmin';
-import EventForm from './components/form_eventos';
+import EventForm from './components/FormEventos';
 import CalendarView from './components/Calendario';
 import EventDetailModal from './components/Detallesevento';
 import EventFilter from './components/Filtros';
 import LandingHero from './components/Articulo';
 import UserProfile from './components/Perfil';
 import LoginForm from './components/LoginForm';
-import RegisterForm from './components/Form_registro';
+import RegisterForm from './components/Formregistro';
 import { defaultEvents } from './Pack/eventos';
 import { defaultUsers } from './Pack/usuarios';
 import UserList from './components/UserList';
-import LayoutFooter from './components/Footer';
-import LayoutHeader from './components/Header';
-import { createStorage, getStorage, setStorage } from './Util/Almacenamiento';
+import LayoutFooter from './components/Piedepagina';
+import LayoutHeader from './components/Menunav';
+import { createStorage, getStorage, setStorage, generateUniqueId } from './Util/Almacenamiento';
 
 
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const RegisterForm = ({ onRegister, onShowLogin }) => {
+const Formregistro = ({ onRegister, onShowLogin }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -94,4 +94,4 @@ const RegisterForm = ({ onRegister, onShowLogin }) => {
   );
 };
 
-export default RegisterForm;
+export default Formregistro;

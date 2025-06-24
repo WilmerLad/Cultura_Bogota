@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const UserProfile = ({ user, onLogout, onSaveInterests, isAdmin, onEditUser, isEditingOtherUser, onDeleteUser }) => {
+const Perfil = ({ user, onLogout, onSaveInterests, isAdmin, onEditUser, isEditingOtherUser, onDeleteUser }) => {
   const [editingInterests, setEditingInterests] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState(user.interests || []);
   const [editingProfile, setEditingProfile] = useState(false);
@@ -182,4 +182,4 @@ const UserProfile = ({ user, onLogout, onSaveInterests, isAdmin, onEditUser, isE
   );
 };
 
-export default UserProfile;
+export default Perfil;

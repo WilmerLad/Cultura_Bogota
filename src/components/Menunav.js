@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LayoutHeader = ({ onLoginRegisterClick, onLogout, isLoggedIn, setCurrentPage, isAdmin }) => {
+const Menunav = ({ onLoginRegisterClick, onLogout, isLoggedIn, setCurrentPage, isAdmin }) => {
   return (
     <header className="p-4 bg-gray-800 shadow-sm border-b border-gray-800">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -77,4 +77,4 @@ const LayoutHeader = ({ onLoginRegisterClick, onLogout, isLoggedIn, setCurrentPa
   );
 };
 
-export default LayoutHeader;
+export default Menunav;

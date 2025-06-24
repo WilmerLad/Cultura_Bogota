@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LandingHero = ({ onExploreClick }) => {
+const Articulo = ({ onExploreClick }) => {
   return (
 
     <section className="h-96 min-h-[65vh] relative  bg-cover bg-center rounded-xl overflow-hidden shadow-lg" style={{ backgroundImage: 'url("https://bogota.gov.co/sites/default/files/2023-08/bogota_5.jpeg")' }}>
@@ -18,4 +18,4 @@ const LandingHero = ({ onExploreClick }) => {
   );
 };
 
-export default LandingHero;
+export default Articulo;

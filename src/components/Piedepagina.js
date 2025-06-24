@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LayoutFooter = () => {
+const Piedepagina = () => {
   const members = [
     "Wilmer Alexander Ladino Monje",
     "Estefania Correa Corrales",
@@ -28,4 +28,4 @@ const LayoutFooter = () => {
   );
 };
 
-export default LayoutFooter;
+export default Piedepagina;

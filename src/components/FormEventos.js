@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const form_eventos = ({ eventToEdit, onSave, onCancel }) => {
+const FormEventos = ({ eventToEdit, onSave, onCancel }) => {
   const [eventData, setEventData] = useState({
     title: '',
     date: '',
@@ -191,4 +191,4 @@ const form_eventos = ({ eventToEdit, onSave, onCancel }) => {
   );
 };
 
-export default form_eventos;
+export default FormEventos;
