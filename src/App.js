@@ -9,8 +9,8 @@ import LandingHero from './components/Articulo';
 import UserProfile from './components/Perfil';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/Formregistro';
-import { defaultEvents } from './Pack/eventos';
-import { defaultUsers } from './Pack/usuarios';
+import getEventos from './Pack/eventos';
+import getUsers from './Pack/usuarios';
 import UserList from './components/UserList';
 import LayoutFooter from './components/Piedepagina';
 import LayoutHeader from './components/Menunav';
@@ -31,12 +31,9 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(() => {
     return getStorage('currentUser') || null;
   });
-  const [allEvents, setAllEvents] = useState(() => {
-    return createStorage('allEvents', defaultEvents);
-  });
-  const [allUsers, setAllUsers] = useState(() => {
-    return createStorage('allUsers', defaultUsers);
-  });
+  const [allEvents, setAllEvents] = useState([]);
+
+  const [allUsers, setAllUsers] = useState([]);
 
   // Estados para edición de eventos y usuarios, y para ver detalle de un evento
   const [eventToEdit, setEventToEdit] = useState(null);
@@ -44,12 +41,21 @@ const App = () => {
   const [userToEdit, setUserToEdit] = useState(null); // For admin editing user profiles
 
   useEffect(() => {
-    setStorage('currentUser', currentUser);
-  }, [currentUser]);
+    const cargarusuario = async () => {
+      const usuariosfirebase = await getUsers();
+      setAllUsers(usuariosfirebase);
+      };
+    cargarusuario();
+  }, []);
 
   useEffect(() => {
-    setStorage('allEvents', allEvents);
-  }, [allEvents]);
+    const cargarEventos = async () => {
+      const eventosFirebase = await getEventos();
+      setAllEvents(eventosFirebase); // 👈 Los carga en el estado
+    };
+
+    cargarEventos();
+  }, []);
 
   useEffect(() => {
     setStorage('allUsers', allUsers);
