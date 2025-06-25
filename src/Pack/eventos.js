@@ -62,7 +62,7 @@ export const defaultEvents = [
     time: '09:00',
     location: 'Chapinero',
     address: 'Museo de Arte Moderno de Bogotá, Calle 24 #6-00',
-    type: 'Otros',
+    type: 'Arte',
     description: 'Una colección de obras de artistas contemporáneos.',
   },
   {
