@@ -2,8 +2,8 @@ import React from 'react';
 
 const Filtros = ({ filters, onFilterChange }) => {
   const filterOptions = {
-    type: ['Música', 'Teatro', 'Cine', 'Talleres', 'Ferias', 'Otros'],
-    location: ['Chapinero', 'Usaquén', 'Teusaquillo', 'La Candelaria', 'Suba', 'Fontibón', 'Kennedy'],
+    type: ['Música', 'Teatro', 'Cine', 'Talleres', 'Ferias', 'Gastronomia', 'Deportes', 'Arte', 'Otros'],
+    location: ['Chapinero','La Candelaria','Teusaquillo','Suba','Kennedy','Bosa','San Cristóbal','Tunjuelito','Fontibón'],
     date: ['Hoy', 'Esta semana', 'Este mes'],
   };
 

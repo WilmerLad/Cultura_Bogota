@@ -39,9 +39,9 @@ const FormEventos = ({ eventToEdit, onSave, onCancel }) => {
     onSave(eventData);
   };
 
-  const eventTypes = ['Música', 'Teatro', 'Cine', 'Talleres', 'Ferias', 'Otros'];
-  const eventLocations = ['Chapinero', 'Usaquén', 'Teusaquillo', 'La Candelaria', 'Suba', 'Fontibón', 'Kennedy'];
-
+  const eventTypes = ['Música', 'Teatro', 'Cine', 'Talleres', 'Ferias', 'Gastronomia', 'Deportes', 'Arte', 'Otros'];
+  const eventLocations = ['Chapinero','La Candelaria','Teusaquillo','Suba','Kennedy','Bosa','San Cristóbal','Tunjuelito','Fontibón'];
+  
   return (
     <div className="p-6 bg-white shadow-lg rounded-xl max-w-2xl mx-auto border border-gray-100">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
