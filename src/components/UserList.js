@@ -1,4 +1,7 @@
 import React from 'react';
+import { doc,deleteDoc } from 'firebase/firestore';
+import db from '../firebaseConfig';
+
 
 const UserList = ({ users, onEditUser, onDeleteUser }) => {
   return (

@@ -3,7 +3,6 @@ import React from 'react';
 const Detallesevento = ({ event, onClose }) => {
   if (!event) return null;
 
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.address + ', ' + event.location + ', Bogotá')}`;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import db from '../firebaseConfig';
 
 const Formregistro = ({ onRegister, onShowLogin }) => {
   const [name, setName] = useState('');
@@ -8,11 +10,32 @@ const Formregistro = ({ onRegister, onShowLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const nuevo = {
+      name,
+      email,
+      password,
+      isAdmin: false,
+      interests: [],
+      savedEvents: [],
+    };
+
     if (password !== confirmPassword) {
       alert('Las contraseñas no coinciden.');
       return;
     }
-    onRegister(name, email, password);
+      // Referencia a la colección 'Usuarios'
+      const userRef = collection(db, 'Users');
+  
+      // Guardar el nuevo usuario en Firebase
+      addDoc(userRef, nuevo)
+        .then(() => {
+          console.log("Usuario Registrdo con exito");
+          onRegister(name, email, password);
+        })
+        .catch((error) => {
+          console.error("Error a registrar el usuario:", error);
+        });
   };
 
   return (

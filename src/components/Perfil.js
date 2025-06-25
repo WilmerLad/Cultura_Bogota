@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { doc, updateDoc, collection } from 'firebase/firestore';
+import db from '../firebaseConfig';
+
 
 const Perfil = ({ user, onLogout, onSaveInterests, isAdmin, onEditUser, isEditingOtherUser, onDeleteUser }) => {
   const [editingInterests, setEditingInterests] = useState(false);
@@ -150,7 +153,7 @@ const Perfil = ({ user, onLogout, onSaveInterests, isAdmin, onEditUser, isEditin
                 ? user.interests.join(', ')
                 : 'No has seleccionado intereses aún.'}
             </p>
-            {(!isEditingOtherUser) && ( // Only current user can edit their own interests
+            {(!isEditingOtherUser  && editingProfile) && ( // Only current user can edit their own interests
               <button
                 onClick={() => setEditingInterests(true)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md"

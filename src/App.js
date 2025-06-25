@@ -14,7 +14,9 @@ import getUsers from './Pack/usuarios';
 import UserList from './components/UserList';
 import LayoutFooter from './components/Piedepagina';
 import LayoutHeader from './components/Menunav';
-import { createStorage, getStorage, setStorage, generateUniqueId } from './Util/Almacenamiento';
+import {  getStorage, setStorage } from './Util/Almacenamiento';
+import { doc,deleteDoc, updateDoc } from 'firebase/firestore';
+import db from './firebaseConfig';
 
 
 
@@ -51,15 +53,15 @@ const App = () => {
   useEffect(() => {
     const cargarEventos = async () => {
       const eventosFirebase = await getEventos();
-      setAllEvents(eventosFirebase); // 👈 Los carga en el estado
+      setAllEvents(eventosFirebase); // carga el estado
     };
 
     cargarEventos();
   }, []);
 
   useEffect(() => {
-    setStorage('allUsers', allUsers);
-  }, [allUsers]);
+    setStorage('currentUser', null);
+  }, [null]);
 
   // Manejar cambio de filtros
   const handleFilterChange = (e) => {
@@ -101,14 +103,11 @@ const App = () => {
     currentUser && currentUser.interests.some((interest) => event.type === interest)
   );
 
-  const popularEvents = [...allEvents].sort((a, b) => {
-    const aInterests = getStorage('userInterestsCount')?.[a.id] || 0;
-    const bInterests = getStorage('userInterestsCount')?.[b.id] || 0;
-    return bInterests - aInterests;
-  }).slice(0, 5); // Top 5 popular events
 
   const handleSeeMore = (id) => {
+    
     const event = allEvents.find(e => e.id === id);
+    console.log(event.id);
     setSelectedEvent(event);
   };
 
@@ -151,7 +150,7 @@ const App = () => {
       return;
     }
     const newUser = {
-      id: generateUniqueId(),
+      
       name,
       email,
       password,
@@ -176,7 +175,7 @@ const App = () => {
   };
 
   const handleAddEvent = (newEvent) => {
-    setAllEvents(prev => [...prev, { ...newEvent, id: generateUniqueId() }]);
+    setAllEvents(prev => [...prev, { ...newEvent }]);
     setCurrentPage('explore');
   };
 
@@ -194,15 +193,27 @@ const App = () => {
     setCurrentPage('explore');
   };
 
-  const handleDeleteEvent = (id) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este evento?')) {
-      setAllEvents(prev => prev.filter(event => event.id !== id));
-      // Also remove from saved events of all users
-      setAllUsers(prevUsers => prevUsers.map(user => ({
-        ...user,
-        savedEvents: user.savedEvents.filter(savedEvent => savedEvent.id !== id)
-      })));
-      alert('Evento eliminado.');
+  const handleDeleteEvent = async (id) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+      try {
+        // Eliminar de Firestore
+        const EventoRef = doc(db, 'Eventos', id);
+        await deleteDoc(EventoRef);
+  
+        // Eliminar del estado local
+        setAllEvents(prevEvents => prevEvents.filter(event => event.id !== id));
+
+        // Opcional: actualizar el estado local
+        setAllUsers(prevUsers => prevUsers.map(user => ({
+          ...user,
+          savedEvents: user.savedEvents.filter(savedEvent => savedEvent.id !== id)
+        })));
+  
+        alert('evento eliminado con éxito');
+      } catch (error) {
+        console.error('Error al eliminar el evento:', error);
+        alert('Error al eliminar el evento');
+      }
     }
   };
 
@@ -218,23 +229,49 @@ const App = () => {
     setCurrentPage('editUserProfile');
   };
 
-  const handleUpdateUser = (updatedUser) => {
-    setAllUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
-    if (currentUser && currentUser.id === updatedUser.id) {
-      setCurrentUser(updatedUser); // Update current user if it's their own profile
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      const userRef = doc(db, 'Users', updatedUser.id);
+      await updateDoc(userRef, {
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        interests: updatedUser.interests || [],
+        // Agrega aquí más campos si tienes otros
+      });
+  
+      setAllUsers(prev =>
+        prev.map(u => (u.id === updatedUser.id ? { ...u, ...updatedUser } : u))
+      );
+  
+      if (currentUser && currentUser.id === updatedUser.id) {
+        setCurrentUser(prev => ({ ...prev, ...updatedUser }));
+      }
+  
+      setUserToEdit(null);
+      setCurrentPage(updatedUser.id === currentUser?.id ? 'profile' : 'userManagement');
+      alert('Usuario actualizado con éxito');
+    } catch (error) {
+      console.error('Error al actualizar usuario:', error);
+      alert('Hubo un error al actualizar el usuario.');
     }
-    setUserToEdit(null);
-    setCurrentPage('userManagement');
   };
+  
 
-  const handleDeleteUser = (userId) => {
+  const handleDeleteUser = async (userId) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      setAllUsers(prev => prev.filter(user => user.id !== userId));
-      if (currentUser && currentUser.id === userId) {
-        setCurrentUser(null); // Log out if current user is deleted
-        setCurrentPage('landing');
-      } else {
-        alert('Usuario eliminado.');
+      try {
+        // Eliminar de Firestore
+        const userRef = doc(db, 'Users', userId);
+        await deleteDoc(userRef);
+  
+        // Opcional: actualizar el estado local
+        setAllUsers(prev => prev.filter(user => user.id !== userId));
+  
+        alert('Usuario eliminado con éxito');
+      } catch (error) {
+        console.error('Error al eliminar el usuario:', error);
+        alert('Error al eliminar el usuario');
       }
     }
   };
@@ -307,26 +344,7 @@ const App = () => {
                 )}
               </div>
             </div>
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4">Eventos Populares</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {popularEvents.length > 0 ? (
-                  popularEvents.map((event) => (
-                    <EventCard
-                      key={event.id}
-                      event={event}
-                      onSeeMore={handleSeeMore}
-                      onInterest={handleInterest}
-                      onEditEvent={handleEditEvent}
-                      onDeleteEvent={handleDeleteEvent}
-                      isAdmin={isAdmin}
-                    />
-                  ))
-                ) : (
-                  <p className="text-center text-gray-600 col-span-full">No hay eventos populares en este momento.</p>
-                )}
-              </div>
-            </div>
+            
           </div>
         )}
 

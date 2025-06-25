@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { collection, addDoc, updateDoc,doc } from 'firebase/firestore';
+import db from '../firebaseConfig';
 
 const FormEventos = ({ eventToEdit, onSave, onCancel }) => {
   const [eventData, setEventData] = useState({
@@ -34,10 +36,32 @@ const FormEventos = ({ eventToEdit, onSave, onCancel }) => {
     setEventData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(eventData);
+    if (!eventData.title || !eventData.date) return;
+  
+    try {
+      if (eventToEdit && eventToEdit.id) {
+        // Editar evento existente
+        const eventoRef = doc(db, 'Eventos', eventToEdit.id);
+        await updateDoc(eventoRef, {
+          ...eventData
+        });
+        console.log("Evento actualizado en Firebase ✅");
+      } else {
+        // Crear nuevo evento
+        const eventosRef = collection(db, 'Eventos');
+        await addDoc(eventosRef, eventData);
+        console.log("Evento creado en Firebase ✅");
+      }
+  
+      onSave && onSave(eventData);
+    } catch (error) {
+      console.error("Error al guardar evento:", error);
+      alert("Hubo un error al guardar el evento.");
+    }
   };
+  
 
   const eventTypes = ['Música', 'Teatro', 'Cine', 'Talleres', 'Ferias', 'Gastronomia', 'Deportes', 'Arte', 'Otros'];
   const eventLocations = ['Chapinero','La Candelaria','Teusaquillo','Suba','Kennedy','Bosa','San Cristóbal','Tunjuelito','Fontibón'];
